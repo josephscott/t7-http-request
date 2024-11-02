@@ -18,6 +18,110 @@ class Client {
 
 	public function __construct() {}
 
+	public function delete(
+		string $url,
+		array $headers = [],
+		array $options = []
+	) : Response {
+		$out = $this->request(
+			method: 'DELETE',
+			url: $url,
+			headers: $headers,
+			options: $options
+		);
+		return $out;
+	}
+
+	public function get(
+		string $url,
+		array $headers = [],
+		array $options = []
+	) : Response {
+		$out = $this->request(
+			method: 'GET',
+			url: $url,
+			headers: $headers,
+			options: $options
+		);
+		return $out;
+	}
+
+	public function head(
+		string $url,
+		array $headers = [],
+		array $options = []
+	) : Response {
+		$out = $this->request(
+			method: 'HEAD',
+			url: $url,
+			headers: $headers,
+			options: $options
+		);
+		return $out;
+	}
+
+	public function options(
+		string $url,
+		array $headers = [],
+		array $options = []
+	) : Response {
+		$out = $this->request(
+			method: 'OPTIONS',
+			url: $url,
+			headers: $headers,
+			options: $options
+		);
+		return $out;
+	}
+
+	public function patch(
+		string $url,
+		array $headers = [],
+		array $data = [],
+		array $options = []
+	) : Response {
+		$out = $this->request(
+			method: 'PATCH',
+			url: $url,
+			headers: $headers,
+			data: $data,
+			options: $options
+		);
+		return $out;
+	}
+
+	public function post(
+		string $url,
+		array $headers = [],
+		array $data = [],
+		array $options = []
+	) : Response {
+		$out = $this->request(
+			method: 'POST',
+			url: $url,
+			headers: $headers,
+			data: $data,
+			options: $options
+		);
+		return $out;
+	}
+
+	public function put(
+		string $url,
+		array $headers = [],
+		array $data = [],
+		array $options = []
+	) : Response {
+		$out = $this->request(
+			method: 'PUT',
+			url: $url,
+			headers: $headers,
+			data: $data,
+			options: $options
+		);
+		return $out;
+	}
+
 	public function request(
 		string $method,
 		string $url,
