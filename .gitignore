@@ -1,0 +1,6 @@
+# Vendor Files
+vendor/*
+composer.lock
+
+# Editor files
+.vscode
