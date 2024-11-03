@@ -2,5 +2,8 @@
 vendor/*
 composer.lock
 
+# Test server log
+phpd.log
+
 # Editor files
 .vscode
