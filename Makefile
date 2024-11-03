@@ -38,18 +38,18 @@ analyze: ## Static analysis, catch problems in code
 tests: test-server ## Run tests against local PHP built-in server
 	@echo
 	@echo "--> Tests: Pest"
-	bash -c "./vendor/bin/pest || if pgrep -q -f 'localhost:17171 -t tests/server'; then pkill -f 'localhost:17171 -t tests/server'; fi"
+	bash -c "./vendor/bin/pest || if pgrep -f 'localhost:17171 -t tests/server'; then pkill -f 'localhost:17171 -t tests/server'; fi"
 	@echo
 	@echo "--> Test Server: stopping"
 	@echo
-	if pgrep -q -f 'localhost:17171 -t tests/server'; then pkill -f 'localhost:17171 -t tests/server'; fi
+	if pgrep -f 'localhost:17171 -t tests/server'; then pkill -f 'localhost:17171 -t tests/server'; fi
 
 .PHONY: test-server
 test-server: ## Use built-in PHP server in the background for testing
 	@echo
 	@echo "--> Test Server: cleaning up"
 	@echo
-	if pgrep -q -f 'localhost:17171 -t tests/server'; then pkill -f 'localhost:17171 -t tests/server'; fi
+	if pgrep -f 'localhost:17171 -t tests/server'; then pkill -f 'localhost:17171 -t tests/server'; fi
 	@echo
 	@echo "--> Test Server: starting"
 	@echo
