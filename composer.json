@@ -12,7 +12,8 @@
 	},
 	"autoload": {
 		"classmap": [
-			"src/t7/http/client.php"
+			"src/t7/http/client.php",
+			"src/t7/http/response.php"
 		]
 	},
 	"config": {
