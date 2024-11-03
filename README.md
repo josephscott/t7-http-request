@@ -1,3 +1,3 @@
-# T7\HTTP\Client
+# T7\HTTP\Request
 
-<img src="https://github.com/josephscott/t7-http-client/actions/workflows/tests.yml/badge.svg">
+<img src="https://github.com/josephscott/t7-http-request/actions/workflows/tests.yml/badge.svg">

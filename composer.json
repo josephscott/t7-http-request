@@ -1,5 +1,5 @@
 {
-	"name": "t7/http_client",
+	"name": "t7/http_request",
 	"license": "MIT",
 	"require": {
 		"php": ">=8.3"
@@ -12,7 +12,7 @@
 	},
 	"autoload": {
 		"classmap": [
-			"src/t7/http/client.php",
+			"src/t7/http/request.php",
 			"src/t7/http/response.php"
 		]
 	},

@@ -3,7 +3,7 @@ declare( strict_types = 1 );
 
 namespace T7\HTTP;
 
-class Client {
+class Request {
 	public array $default_options = [
 		'using' => 'curl',
 		'timeout' => 30,

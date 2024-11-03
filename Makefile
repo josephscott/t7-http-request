@@ -23,7 +23,8 @@ style: ## Fix any style issues
 lint: ## Check if the code is valid
 	@echo
 	@echo "--> Lint"
-	php -l src/t7/http/client.php
+	php -l src/t7/http/request.php
+	php -l src/t7/http/response.php
 	@echo
 
 .PHONY: analyze
