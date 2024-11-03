@@ -34,8 +34,24 @@ analyze: ## Static analysis, catch problems in code
 	@echo
 
 .PHONY: tests
-tests: ## Run tests against local PHP built-in server
+tests: test-server ## Run tests against local PHP built-in server
 	@echo
 	@echo "--> Tests: Pest"
-	./vendor/bin/pest
+	bash -c "./vendor/bin/pest || if pgrep -q -f 'localhost:17171 -t tests/server'; then pkill -f 'localhost:17171 -t tests/server'; fi"
+	@echo
+	@echo "--> Test Server: stopping"
+	@echo
+	if pgrep -q -f 'localhost:17171 -t tests/server'; then pkill -f 'localhost:17171 -t tests/server'; fi
+
+.PHONY: test-server
+test-server: ## Use built-in PHP server in the background for testing
+	@echo
+	@echo "--> Test Server: cleaning up"
+	@echo
+	if pgrep -q -f 'localhost:17171 -t tests/server'; then pkill -f 'localhost:17171 -t tests/server'; fi
+	@echo
+	@echo "--> Test Server: starting"
+	@echo
+	{ php -S localhost:17171 -t tests/server/ > phpd.log 2>&1 & echo $$! > /tmp/t7-server-test-server.pid; }
+	@echo "Test Server PID saved to /tmp/t7-server-test-server.pid"
 	@echo
