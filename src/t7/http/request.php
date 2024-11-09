@@ -3,6 +3,43 @@ declare( strict_types = 1 );
 
 namespace T7\HTTP;
 
+use CURLOPT_CUSTOMREQUEST;
+use CURLOPT_ENCODING;
+use CURLOPT_FOLLOWLOCATION;
+use CURLOPT_HEADERFUNCTION;
+use CURLOPT_HTTPHEADER;
+use CURLOPT_POST;
+use CURLOPT_POSTFIELDS;
+use CURLOPT_PROTOCOLS;
+use CURLOPT_RETURNTRANSFER;
+use CURLOPT_TIMEOUT;
+use CURLPROTO_HTTP;
+use CURLPROTO_HTTPS;
+
+use array_merge;
+use array_shift;
+use count;
+use curl_close;
+use curl_getinfo;
+use curl_init;
+use curl_setopt;
+use curl_setopt_array;
+use explode;
+use file_get_contents;
+use floatval;
+use function_exists;
+use gzdecode;
+use http_build_query;
+use intval;
+use is_numeric;
+use microtime;
+use preg_match;
+use strlen;
+use strpos;
+use stream_context_create;
+use strtolower;
+use trim;
+
 class Request {
 	public array $default_options = [
 		'using' => 'curl',
@@ -171,17 +208,17 @@ class Request {
 		}
 
 		curl_setopt_array( $curl, [
-			\CURLOPT_CUSTOMREQUEST => $method,
-			\CURLOPT_RETURNTRANSFER => true,
-			\CURLOPT_FOLLOWLOCATION => false,
-			\CURLOPT_TIMEOUT => $options['timeout'],
-			\CURLOPT_PROTOCOLS => \CURLPROTO_HTTP | \CURLPROTO_HTTPS,
-			\CURLOPT_HTTPHEADER => $headers,
-			\CURLOPT_HEADERFUNCTION => function ( $curl, $header ) use ( &$response ) {
-				$length = \strlen( $header );
+			CURLOPT_CUSTOMREQUEST => $method,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_FOLLOWLOCATION => false,
+			CURLOPT_TIMEOUT => $options['timeout'],
+			CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+			CURLOPT_HTTPHEADER => $headers,
+			CURLOPT_HEADERFUNCTION => function ( $curl, $header ) use ( &$response ) {
+				$length = strlen( $header );
 				$parts = explode( ':', $header, 2 );
 
-				if ( \count( $parts ) < 2 ) {
+				if ( count( $parts ) < 2 ) {
 					if ( preg_match( '/^HTTP\/([0-9\.]+)\s+([0-9]+)/', $header, $matches ) ) {
 						$response->http_version = (int) $matches[1];
 						$response->code = (int) $matches[2];
@@ -205,18 +242,18 @@ class Request {
 		] );
 
 		if ( $method === 'POST' ) {
-			curl_setopt( $curl, \CURLOPT_POST, true );
-			curl_setopt( $curl, \CURLOPT_POSTFIELDS, http_build_query( $data ) );
+			curl_setopt( $curl, CURLOPT_POST, true );
+			curl_setopt( $curl, CURLOPT_POSTFIELDS, http_build_query( $data ) );
 			$headers['Content-Type'] = 'application/x-www-form-urlencoded';
 		}
 
 		if ( $method === 'PUT' ) {
-			curl_setopt( $curl, \CURLOPT_POSTFIELDS, http_build_query( $data ) );
+			curl_setopt( $curl, CURLOPT_POSTFIELDS, http_build_query( $data ) );
 			$headers['Content-Type'] = 'application/x-www-form-urlencoded';
 		}
 
 		if ( ! empty( $options['encoding'] ) ) {
-			curl_setopt( $curl, \CURLOPT_ENCODING, $options['encoding'] );
+			curl_setopt( $curl, CURLOPT_ENCODING, $options['encoding'] );
 		}
 
 		$headers = array_merge( $this->default_headers, $headers );
@@ -228,7 +265,7 @@ class Request {
 
 		$start = microtime( true );
 		$body = curl_exec( $curl );
-		$response->timing['done'] = \intval(
+		$response->timing['done'] = intval(
 			( microtime( true ) - $start ) * 1000000
 		);
 
@@ -262,7 +299,7 @@ class Request {
 
 		if (
 			! empty( $options['encoding'] )
-			&& \function_exists( 'gzdecode' )
+			&& function_exists( 'gzdecode' )
 		) {
 			$headers['Accept-Encoding'] = 'gzip';
 		}
@@ -274,7 +311,7 @@ class Request {
 			options: $options
 		);
 
-				// XXX: HACK
+		// XXX: HACK
 		// Make Pest happy by suppressing the warnings that can happen
 		// I'd like to find a way to deal with warnings without using @
 		$start = microtime( true );
@@ -283,7 +320,7 @@ class Request {
 			use_include_path: false,
 			context: $context
 		);
-		$response->timing['done'] = \intval(
+		$response->timing['done'] = intval(
 			( microtime( true ) - $start ) * 1000000
 		);
 		if ( $body === false ) {
@@ -355,13 +392,13 @@ class Request {
 
 		$response_code = array_shift( $headers );
 		if ( preg_match( '#HTTP/([0-9\.]+)\s+([0-9]+)#', $response_code, $matches ) ) {
-			$headers[] = 'http_version: ' . \floatval( $matches[1] );
-			$headers[] = 'response_code: ' . \intval( $matches[2] );
+			$headers[] = 'http_version: ' . floatval( $matches[1] );
+			$headers[] = 'response_code: ' . intval( $matches[2] );
 		}
 
 		foreach ( $headers as $header ) {
 			$parts = explode( ':', $header, 2 );
-			if ( \count( $parts ) === 2 ) {
+			if ( count( $parts ) === 2 ) {
 				$parts[1] = trim( $parts[1] );
 				if ( is_numeric( $parts[1] ) ) {
 					$parts[1] = (int) $parts[1];
