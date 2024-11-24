@@ -1,5 +1,5 @@
 {
-	"name": "t7/http_request",
+	"name": "t7/http-request",
 	"license": "MIT",
 	"require": {
 		"php": ">=8.3"
