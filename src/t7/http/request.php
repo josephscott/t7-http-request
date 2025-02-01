@@ -3,6 +3,14 @@ declare( strict_types = 1 );
 
 namespace T7\HTTP;
 
+use array_merge;
+use array_shift;
+use count;
+use curl_close;
+use curl_getinfo;
+use curl_init;
+use curl_setopt;
+use curl_setopt_array;
 use CURLOPT_CUSTOMREQUEST;
 use CURLOPT_ENCODING;
 use CURLOPT_FOLLOWLOCATION;
@@ -15,15 +23,6 @@ use CURLOPT_RETURNTRANSFER;
 use CURLOPT_TIMEOUT;
 use CURLPROTO_HTTP;
 use CURLPROTO_HTTPS;
-
-use array_merge;
-use array_shift;
-use count;
-use curl_close;
-use curl_getinfo;
-use curl_init;
-use curl_setopt;
-use curl_setopt_array;
 use explode;
 use file_get_contents;
 use floatval;
@@ -34,9 +33,9 @@ use intval;
 use is_numeric;
 use microtime;
 use preg_match;
+use stream_context_create;
 use strlen;
 use strpos;
-use stream_context_create;
 use strtolower;
 use trim;
 
@@ -50,7 +49,7 @@ class Request {
 	public array $default_headers = [
 		'Connection' => 'close',
 		'Accept' => '*/*',
-		'User-Agent' => 'amulet-http-request',
+		'User-Agent' => 't7-http-request',
 	];
 
 	public function __construct() {}
