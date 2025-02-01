@@ -7,6 +7,7 @@ test( 'get-curl', function () {
 
 	expect( $response->error )->toBe( false );
 	expect( $response->code )->toBe( 200 );
+	expect( $response->headers['content-type'] )->toBe( 'application/json' );
 } );
 
 test( 'get-404-response', function () {
