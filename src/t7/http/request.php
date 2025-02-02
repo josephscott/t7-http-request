@@ -113,7 +113,7 @@ class Request {
 	public function patch(
 		string $url,
 		array $headers = [],
-		array $data = [],
+		string|array $data = [],
 		array $options = []
 	) : Response {
 		$out = $this->request(
@@ -129,7 +129,7 @@ class Request {
 	public function post(
 		string $url,
 		array $headers = [],
-		array $data = [],
+		string|array $data = [],
 		array $options = []
 	) : Response {
 		$out = $this->request(
@@ -145,7 +145,7 @@ class Request {
 	public function put(
 		string $url,
 		array $headers = [],
-		array $data = [],
+		string|array $data = [],
 		array $options = []
 	) : Response {
 		$out = $this->request(
@@ -162,7 +162,7 @@ class Request {
 		string $method,
 		string $url,
 		array $headers = [],
-		array $data = [],
+		string|array $data = [],
 		array $options = []
 	) : Response {
 		$out = null;
@@ -194,7 +194,7 @@ class Request {
 		string $method,
 		string $url,
 		array $headers = [],
-		array $data = [],
+		string|array $data = [],
 		array $options = []
 	) : Response {
 		$response = new Response();
@@ -242,8 +242,11 @@ class Request {
 
 		if ( $method === 'POST' ) {
 			curl_setopt( $curl, CURLOPT_POST, true );
-			curl_setopt( $curl, CURLOPT_POSTFIELDS, http_build_query( $data ) );
-			$headers['Content-Type'] = 'application/x-www-form-urlencoded';
+			if ( is_array( $data ) ) {
+				curl_setopt( $curl, CURLOPT_POSTFIELDS, http_build_query( $data ) );
+			} else {
+				curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+			}
 		}
 
 		if ( $method === 'PUT' ) {
