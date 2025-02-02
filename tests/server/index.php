@@ -2,6 +2,36 @@
 declare( strict_types = 1 );
 $out = [];
 
+if ( $_SERVER['REQUEST_URI'] === '/auth' ) {
+	if ( ! isset( $_SERVER['HTTP_AUTHORIZATION'] ) || $_SERVER['HTTP_AUTHORIZATION'] !== 'Basic ' . base64_encode( 'user:pass' ) ) {
+		header( 'HTTP/1.1 401 Unauthorized' );
+		header( 'WWW-Authenticate: Basic realm="Test Realm"' );
+		exit;
+	}
+}
+
+if ( $_SERVER['REQUEST_URI'] === '/redirect' ) {
+	header( 'Location: http://localhost:17171/' );
+	header( 'HTTP/1.1 302 Found' );
+	exit;
+}
+
+if ( isset( $_SERVER['HTTP_ACCEPT_ENCODING'] ) && strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) !== false ) {
+	if ( $_SERVER['REQUEST_URI'] === '/compressed' ) {
+		header( 'Content-Encoding: gzip' );
+		$out['compressed'] = true;
+		send_body( $out, true );
+		exit;
+	}
+}
+
+if ( $_SERVER['REQUEST_URI'] === '/large' ) {
+	$large_data = str_repeat( 'x', 2 * 1024 * 1024 ); // 2MB of data
+	$out['data'] = $large_data;
+	send_body( $out );
+	exit;
+}
+
 $method = $_GET['method'] ?? 'get';
 $method = strtolower( $method );
 $out['method'] = $method;
@@ -42,8 +72,13 @@ send_body( $out );
 
 /* *** */
 
-function send_body( $out ) {
+function send_body( $out, $compress = false ) {
 	$json = json_encode( $out, JSON_PRETTY_PRINT );
 	header( 'Content-Type: application/json' );
-	echo $json;
+
+	if ( $compress ) {
+		echo gzencode( $json );
+	} else {
+		echo $json;
+	}
 }

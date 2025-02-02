@@ -62,3 +62,61 @@ test( 'get-timeout', function () {
 	expect( $response->error )->toBe( false );
 	expect( $response->code )->toBe( 200 );
 } );
+
+test( 'get-redirect-handling', function () {
+	$request = new \T7\HTTP\Request();
+	$response = $request->get( url: 'http://localhost:17171/redirect' );
+
+	expect( $response->error )->toBe( false );
+	expect( $response->code )->toBe( 302 );
+	expect( $response->headers['location'] )->not->toBe( 'http://localhost:17171/redirect' );
+} );
+
+test( 'get-with-compression', function () {
+	$request = new \T7\HTTP\Request();
+	$response = $request->get(
+		url: 'http://localhost:17171/compressed',
+		headers: ['Accept-Encoding' => 'gzip, deflate']
+	);
+
+	expect( $response->error )->toBe( false );
+	expect( $response->code )->toBe( 200 );
+	expect( $response->headers['content-encoding'] ?? '' )->toContain( 'gzip' );
+} );
+
+test( 'get-large-response', function () {
+	$request = new \T7\HTTP\Request();
+	$response = $request->get( url: 'http://localhost:17171/large' );
+
+	expect( $response->error )->toBe( false );
+	expect( $response->code )->toBe( 200 );
+	expect( strlen( $response->body ) )->toBeGreaterThan( 1024 * 1024 ); // At least 1MB
+} );
+
+test( 'get-with-connection-options', function () {
+	$request = new \T7\HTTP\Request();
+	$response = $request->get(
+		url: 'http://localhost:17171/',
+		options: [
+			'connect_timeout' => 5,
+			'max_redirects' => 3,
+			'verify_ssl' => true,
+		]
+	);
+
+	expect( $response->error )->toBe( false );
+	expect( $response->code )->toBe( 200 );
+} );
+
+test( 'get-with-basic-auth', function () {
+	$request = new \T7\HTTP\Request();
+	$response = $request->get(
+		url: 'http://localhost:17171/auth',
+		headers: [
+			'Authorization' => 'Basic ' . base64_encode( 'user:pass' ),
+		]
+	);
+
+	expect( $response->error )->toBe( false );
+	expect( $response->code )->toBe( 200 );
+} );
