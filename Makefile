@@ -1,5 +1,5 @@
 SHELL = /bin/bash
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := help
 HERE := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # https://mwop.net/blog/2023-12-11-advent-makefile.html
