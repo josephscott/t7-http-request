@@ -1,9 +1,12 @@
 <?php
 declare( strict_types = 1 );
 
+beforeEach( function () {
+	$this->http = new \T7\HTTP\Request();
+} );
+
 test( 'get-curl', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get( url: 'http://localhost:17171/' );
+	$response = $this->http->get( url: 'http://localhost:17171/' );
 
 	expect( $response->error )->toBe( false );
 	expect( $response->code )->toBe( 200 );
@@ -11,16 +14,14 @@ test( 'get-curl', function () {
 } );
 
 test( 'get-404-response', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get( url: 'http://localhost:17171/not-found' );
+	$response = $this->http->get( url: 'http://localhost:17171/not-found' );
 
 	expect( $response->error )->toBe( false );
 	expect( $response->code )->toBe( 200 );
 } );
 
 test( 'get-with-query-parameters', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get(
+	$response = $this->http->get(
 		url: 'http://localhost:17171/echo?name=test&value=123'
 	);
 
@@ -33,8 +34,7 @@ test( 'get-with-query-parameters', function () {
 } );
 
 test( 'get-with-custom-headers', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get(
+	$response = $this->http->get(
 		url: 'http://localhost:17171/headers',
 		headers: ['X-Custom-Header' => 'test-value']
 	);
@@ -45,16 +45,14 @@ test( 'get-with-custom-headers', function () {
 } );
 
 test( 'get-invalid-url', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get( url: 'http://invalid-domain-that-does-not-exist.test' );
+	$response = $this->http->get( url: 'http://invalid-domain-that-does-not-exist.test' );
 
 	expect( $response->error )->toBe( true );
 	expect( $response->code )->toBe( 0 );
 } );
 
 test( 'get-timeout', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get(
+	$response = $this->http->get(
 		url: 'http://localhost:17171/delay',
 		options: ['timeout' => 1]
 	);
@@ -64,8 +62,7 @@ test( 'get-timeout', function () {
 } );
 
 test( 'get-redirect-handling', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get( url: 'http://localhost:17171/redirect' );
+	$response = $this->http->get( url: 'http://localhost:17171/redirect' );
 
 	expect( $response->error )->toBe( false );
 	expect( $response->code )->toBe( 302 );
@@ -73,8 +70,7 @@ test( 'get-redirect-handling', function () {
 } );
 
 test( 'get-with-compression', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get(
+	$response = $this->http->get(
 		url: 'http://localhost:17171/compressed',
 		headers: ['Accept-Encoding' => 'gzip, deflate']
 	);
@@ -85,8 +81,7 @@ test( 'get-with-compression', function () {
 } );
 
 test( 'get-large-response', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get( url: 'http://localhost:17171/large' );
+	$response = $this->http->get( url: 'http://localhost:17171/large' );
 
 	expect( $response->error )->toBe( false );
 	expect( $response->code )->toBe( 200 );
@@ -94,8 +89,7 @@ test( 'get-large-response', function () {
 } );
 
 test( 'get-with-connection-options', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get(
+	$response = $this->http->get(
 		url: 'http://localhost:17171/',
 		options: [
 			'connect_timeout' => 5,
@@ -109,8 +103,7 @@ test( 'get-with-connection-options', function () {
 } );
 
 test( 'get-with-basic-auth', function () {
-	$request = new \T7\HTTP\Request();
-	$response = $request->get(
+	$response = $this->http->get(
 		url: 'http://localhost:17171/auth',
 		headers: [
 			'Authorization' => 'Basic ' . base64_encode( 'user:pass' ),
