@@ -76,6 +76,10 @@ $status = $_GET['status'] ?? 0;
 $status = (int) $status;
 $out['status'] = $status;
 if ( $status > 0 ) {
+	if ( $status === 204 ) {
+		header( 'HTTP/1.0 204 No Content' );
+		exit; // 204 responses should not include a body
+	}
 	header( "HTTP/1.0 $status" );
 	send_body( $out );
 	exit;
@@ -97,6 +101,13 @@ foreach( $_GET as $k => $v ) {
 
 foreach( $_POST as $k => $v ) {
 	$out['post'][$k] = $v;
+}
+
+// For DELETE requests, check if we need to handle specific headers
+if ( $_SERVER['REQUEST_METHOD'] === 'DELETE' ) {
+	if ( isset( $_SERVER['HTTP_IF_MATCH'] ) ) {
+		$out['headers']['If-Match'] = $_SERVER['HTTP_IF_MATCH'];
+	}
 }
 
 send_body( $out );
