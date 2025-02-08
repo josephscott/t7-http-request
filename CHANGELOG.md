@@ -2,6 +2,7 @@
 
 ## ???? : ????
 - Fix PATCH requests
+- When using PHP to make request, only mark responses above 399 as an error
 - Support string and array for POST data
 - Prefer dash for path naming
 - Bump josephscott/phpcsfixer-config to 0.0.4

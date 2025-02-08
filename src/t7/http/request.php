@@ -348,10 +348,7 @@ class Request {
 		$response->code = $response->headers['response_code'];
 		unset( $response->headers['response_code'] );
 
-		if (
-			$response->code < 200
-			|| $response->code > 299
-		) {
+		if ( $response->code > 399 ) {
 			$response->error = true;
 			return $response;
 		}
