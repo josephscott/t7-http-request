@@ -2,9 +2,19 @@
 declare( strict_types = 1 );
 $out = [];
 
-// Parse PUT data
-if ( $_SERVER['REQUEST_METHOD'] === 'PUT' ) {
-	parse_str( file_get_contents( 'php://input' ), $_POST );
+// Parse PUT and PATCH data
+if ( in_array( $_SERVER['REQUEST_METHOD'], ['PUT', 'PATCH'] ) ) {
+	if ( isset( $_SERVER['CONTENT_TYPE'] ) && (
+		strpos( $_SERVER['CONTENT_TYPE'], 'application/json-patch+json' ) !== false ||
+		strpos( $_SERVER['CONTENT_TYPE'], 'application/merge-patch+json' ) !== false
+	) ) {
+		$input = json_decode( file_get_contents( 'php://input' ), true );
+		if ( $input !== null ) {
+			$_POST = $input;
+		}
+	} else {
+		parse_str( file_get_contents( 'php://input' ), $_POST );
+	}
 }
 
 // Special endpoints that don't require method parameter check
@@ -13,7 +23,7 @@ $is_special_endpoint = in_array( $_SERVER['REQUEST_URI'], $special_endpoints );
 
 // Handle OPTIONS pre-flight requests
 if ( $_SERVER['REQUEST_METHOD'] === 'OPTIONS' ) {
-	$allowed_methods = 'GET, POST, PUT, DELETE, OPTIONS, HEAD';
+	$allowed_methods = 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD';
 	header( 'Allow: ' . $allowed_methods );
 
 	// Handle CORS headers if Origin is present
@@ -26,7 +36,7 @@ if ( $_SERVER['REQUEST_METHOD'] === 'OPTIONS' ) {
 		if ( isset( $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ) ) {
 			header( 'Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] );
 		} else {
-			header( 'Access-Control-Allow-Headers: Content-Type, Authorization, X-Custom-Header' );
+			header( 'Access-Control-Allow-Headers: Content-Type, Authorization, X-Custom-Header, If-Match' );
 		}
 	}
 
