@@ -3,9 +3,24 @@ declare( strict_types = 1 );
 $out = [];
 
 if ( $_SERVER['REQUEST_URI'] === '/auth' ) {
-	if ( ! isset( $_SERVER['HTTP_AUTHORIZATION'] ) || $_SERVER['HTTP_AUTHORIZATION'] !== 'Basic ' . base64_encode( 'user:pass' ) ) {
+	if ( ! isset( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
 		header( 'HTTP/1.1 401 Unauthorized' );
 		header( 'WWW-Authenticate: Basic realm="Test Realm"' );
+		exit;
+	}
+
+	$auth_header = $_SERVER['HTTP_AUTHORIZATION'];
+	$expected_auth = 'Basic ' . base64_encode( 'user:pass' );
+
+	if ( $auth_header !== $expected_auth ) {
+		header( 'HTTP/1.1 401 Unauthorized' );
+		header( 'WWW-Authenticate: Basic realm="Test Realm"' );
+		exit;
+	}
+
+	if ( $_SERVER['REQUEST_METHOD'] === 'HEAD' ) {
+		header( 'HTTP/1.1 200 OK' );
+		header( 'Content-Type: application/json' );
 		exit;
 	}
 }
