@@ -11,6 +11,31 @@ if ( $_SERVER['REQUEST_METHOD'] === 'PUT' ) {
 $special_endpoints = ['/auth', '/redirect', '/compressed', '/large'];
 $is_special_endpoint = in_array( $_SERVER['REQUEST_URI'], $special_endpoints );
 
+// Handle OPTIONS pre-flight requests
+if ( $_SERVER['REQUEST_METHOD'] === 'OPTIONS' ) {
+	$allowed_methods = 'GET, POST, PUT, DELETE, OPTIONS, HEAD';
+	header( 'Allow: ' . $allowed_methods );
+
+	// Handle CORS headers if Origin is present
+	if ( isset( $_SERVER['HTTP_ORIGIN'] ) ) {
+		header( 'Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'] );
+		header( 'Access-Control-Allow-Methods: ' . $allowed_methods );
+		header( 'Access-Control-Max-Age: 86400' ); // 24 hours
+
+		// Handle requested headers
+		if ( isset( $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ) ) {
+			header( 'Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] );
+		} else {
+			header( 'Access-Control-Allow-Headers: Content-Type, Authorization, X-Custom-Header' );
+		}
+	}
+
+	// For pre-flight requests, we can return early
+	if ( isset( $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] ) ) {
+		exit;
+	}
+}
+
 // Handle basic auth
 if ( $_SERVER['REQUEST_URI'] === '/auth' ) {
 	if ( ! isset( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
