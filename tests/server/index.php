@@ -2,6 +2,16 @@
 declare( strict_types = 1 );
 $out = [];
 
+// Parse PUT data
+if ( $_SERVER['REQUEST_METHOD'] === 'PUT' ) {
+	parse_str( file_get_contents( 'php://input' ), $_POST );
+}
+
+// Special endpoints that don't require method parameter check
+$special_endpoints = ['/auth', '/redirect', '/compressed', '/large'];
+$is_special_endpoint = in_array( $_SERVER['REQUEST_URI'], $special_endpoints );
+
+// Handle basic auth
 if ( $_SERVER['REQUEST_URI'] === '/auth' ) {
 	if ( ! isset( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
 		header( 'HTTP/1.1 401 Unauthorized' );
@@ -23,6 +33,9 @@ if ( $_SERVER['REQUEST_URI'] === '/auth' ) {
 		header( 'Content-Type: application/json' );
 		exit;
 	}
+
+	// Auth successful, continue to normal processing
+	$out['auth'] = 'success';
 }
 
 if ( $_SERVER['REQUEST_URI'] === '/redirect' ) {
@@ -47,13 +60,16 @@ if ( $_SERVER['REQUEST_URI'] === '/large' ) {
 	exit;
 }
 
-$method = $_GET['method'] ?? 'get';
-$method = strtolower( $method );
-$out['method'] = $method;
-if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== $method ) {
-	header( 'HTTP/1.0 405 Method Not Allowed' );
-	send_body( $out );
-	exit;
+// Only check method parameter for non-special endpoints
+if ( ! $is_special_endpoint ) {
+	$method = $_GET['method'] ?? 'get';
+	$method = strtolower( $method );
+	$out['method'] = $method;
+	if ( strtolower( $_SERVER['REQUEST_METHOD'] ) !== $method ) {
+		header( 'HTTP/1.0 405 Method Not Allowed' );
+		send_body( $out );
+		exit;
+	}
 }
 
 $status = $_GET['status'] ?? 0;
