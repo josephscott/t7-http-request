@@ -240,7 +240,7 @@ class Request {
 			},
 		] );
 
-		if ( $method === 'POST' ) {
+		if ( $method === 'PATCH' || $method === 'POST' ) {
 			curl_setopt( $curl, CURLOPT_POST, true );
 			if ( is_array( $data ) ) {
 				curl_setopt( $curl, CURLOPT_POSTFIELDS, http_build_query( $data ) );
