@@ -1,6 +1,6 @@
 # T7\HTTP\Request
 
-<img src="https://github.com/josephscott/t7-http-request/actions/workflows/tests.yml/badge.svg">
+<a href="https://github.com/josephscott/t7-http-request/actions"><img src="https://github.com/josephscott/t7-http-request/actions/workflows/tests.yml/badge.svg"></a>
 
 A lightweight, flexible HTTP client library for PHP that supports both cURL and native PHP streams. This library provides a simple, consistent interface for making HTTP requests while maintaining powerful features like custom headers, authentication, and various request methods.
 
