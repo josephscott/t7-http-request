@@ -44,6 +44,8 @@ class Request {
 		'using' => 'curl',
 		'timeout' => 30,
 		'encoding' => 'gzip',
+		'verify_host' => 2,
+		'verify_peer' => true,
 	];
 
 	public array $default_headers = [
@@ -212,6 +214,8 @@ class Request {
 			CURLOPT_FOLLOWLOCATION => false,
 			CURLOPT_TIMEOUT => $options['timeout'],
 			CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+			CURLOPT_SSL_VERIFYHOST => $options['verify_host'],
+			CURLOPT_SSL_VERIFYPEER => $options['verify_peer'],
 			CURLOPT_HTTPHEADER => $headers,
 			CURLOPT_HEADERFUNCTION => function ( $curl, $header ) use ( &$response ) {
 				$length = strlen( $header );
