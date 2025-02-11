@@ -4,8 +4,8 @@
 - Fix PATCH requests
 - When using PHP to make request, only mark responses above 399 as an error
 - Support string and array for POST data
-- New default option: curl_verify_host
-- New default option: curl_verify_peer
+- New default option: verify_host
+- New default option: verify_peer
 - Prefer dash for path naming
 - Bump josephscott/phpcsfixer-config to 0.0.4
 - Bump friendsofphp/php-cs-fixer to 3.65
