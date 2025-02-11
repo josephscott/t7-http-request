@@ -1,6 +1,6 @@
 # T7/HTTP/Client Changelog
 
-## ???? : ????
+## 0.0.2 : 2025-02-11
 - Fix PATCH requests
 - When using PHP to make request, only mark responses above 399 as an error
 - Support string and array for POST data
