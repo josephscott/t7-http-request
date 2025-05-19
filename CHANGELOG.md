@@ -1,5 +1,9 @@
 # T7/HTTP/Client Changelog
 
+## 0.0.3 : ????
+- Allow php-cs-fixer to work with PHP 8.4
+
+
 ## 0.0.2 : 2025-02-11
 - Fix PATCH requests
 - When using PHP to make request, only mark responses above 399 as an error
@@ -11,6 +15,7 @@
 - Bump friendsofphp/php-cs-fixer to 3.65
 - Bump phpstan/phpstan to 2.1
 - Bump pestphp/pest to 3.7.1
+
 
 ## 0.0.1 : 2024-11-11
 - First release
