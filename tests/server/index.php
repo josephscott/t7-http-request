@@ -17,6 +17,22 @@ if ( in_array( $_SERVER['REQUEST_METHOD'], ['PUT', 'PATCH'] ) ) {
 	}
 }
 
+// Handle cookie parameters
+if ( isset( $_GET['set_cookie'] ) ) {
+	$cookie_parts = explode( ':', $_GET['set_cookie'] );
+	if ( count( $cookie_parts ) >= 2 ) {
+		$cookie_name = $cookie_parts[0];
+		$cookie_value = $cookie_parts[1];
+		$cookie_params = '';
+
+		if ( count( $cookie_parts ) > 2 ) {
+			$cookie_params = $cookie_parts[2];
+		}
+
+		header( "Set-Cookie: $cookie_name=$cookie_value" . $cookie_params );
+	}
+}
+
 // Special endpoints that don't require method parameter check
 $special_endpoints = ['/auth', '/redirect', '/compressed', '/large'];
 $is_special_endpoint = in_array( $_SERVER['REQUEST_URI'], $special_endpoints );
@@ -136,6 +152,17 @@ foreach( $_GET as $k => $v ) {
 
 foreach( $_POST as $k => $v ) {
 	$out['post'][$k] = $v;
+}
+
+// Handle file uploads
+if ( ! empty( $_FILES ) ) {
+	foreach ( $_FILES as $k => $file_info ) {
+		$out['post'][$k] = [
+			'name' => $file_info['name'],
+			'type' => $file_info['type'],
+			'size' => $file_info['size'],
+		];
+	}
 }
 
 // For DELETE requests, check if we need to handle specific headers

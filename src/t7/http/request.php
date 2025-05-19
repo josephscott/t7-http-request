@@ -247,7 +247,21 @@ class Request {
 		if ( $method === 'PATCH' || $method === 'POST' ) {
 			curl_setopt( $curl, CURLOPT_POST, true );
 			if ( is_array( $data ) ) {
-				curl_setopt( $curl, CURLOPT_POSTFIELDS, http_build_query( $data ) );
+				// Don't use http_build_query for arrays that might contain file uploads
+				$has_file = false;
+				foreach ( $data as $value ) {
+					if ( is_object( $value ) && get_class( $value ) === 'CURLFile' ) {
+						$has_file = true;
+						break;
+					}
+				}
+
+				if ( $has_file ) {
+					// Pass the array directly for file uploads
+					curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+				} else {
+					curl_setopt( $curl, CURLOPT_POSTFIELDS, http_build_query( $data ) );
+				}
 			} else {
 				curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
 			}

@@ -2,6 +2,7 @@
 
 ## 0.0.3 : ????
 - Allow php-cs-fixer to work with PHP 8.4
+- Add cookie and file upload tests
 
 
 ## 0.0.2 : 2025-02-11
