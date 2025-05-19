@@ -1,6 +1,6 @@
 # T7/HTTP/Client Changelog
 
-## 0.0.3 : ????
+## 0.0.3 : 2025-05-19
 - Allow php-cs-fixer to work with PHP 8.4
 - Fix file uploads
 - Add cookie and file upload tests
